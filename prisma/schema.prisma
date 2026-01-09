@@ -1,14 +1,103 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum NoteSourceType {
+  AUDIO
+  TEXT
+}
+
+model Patient {
+  id          String   @id @default(uuid())
+  mrn         String   @unique
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  sex         Sex
+  avatarUrl   String?
+
+  email        String?
+  phone        String?
+  addressLine1 String?
+  city         String?
+  state        String?
+  postalCode   String?
+
+  allergies   String[]
+  diagnoses   String[]
+  medications String[]
+
+  notes Note[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id        String     @id @default(uuid())
+  patientId String
+  type      NoteType
+  status    NoteStatus @default(DRAFT)
+
+  content  String  @db.Text
+  audioUrl String?
+
+  subjective String? @db.Text
+  objective  String? @db.Text
+  assessment String? @db.Text
+  plan       String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  medicalEntities MedicalEntity[]
+}
+
+model MedicalEntity {
+  id        String     @id @default(uuid())
+  noteId    String
+  text      String
+  category  EntityType
+  score     Float
+  dosage    String?
+  frequency String?
+
+  createdAt DateTime @default(now())
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+}
+
+enum EntityType {
+  MEDICATION
+  DIAGNOSIS
+  SYMPTOM
+  TEST
+  PROCEDURE
+  OTHER
+}
+
+enum NoteType {
+  SOAP
+  TEXT
+  AUDIO
+}
+
+enum NoteStatus {
+  DRAFT
+  PROCESSING
+  FINAL
+  FAILED
 }

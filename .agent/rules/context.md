@@ -6,7 +6,7 @@ This is a high-stakes technical interview for an AI Scribe Notes Management Tool
 
 project-scope-summary
 
-Domain: Healthcare AI Scribe (Clinical notes management). The app is called LemeAI
+Domain: Healthcare AI Scribe (Clinical notes management). The app is called LimeAI
 
 Key Features: Patient seeding, Audio/Text input, Whisper/OpenAI integration (SOAP format), and Note/Patient views.
 
