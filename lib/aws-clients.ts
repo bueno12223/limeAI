@@ -5,8 +5,8 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { AWS_CONFIG } from "@/constants/config";
 
 const CREDENTIALS = {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.LIME_AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.LIME_AWS_SECRET_ACCESS_KEY || "",
 };
 
 export const transcribeClient = new TranscribeClient({
