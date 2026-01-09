@@ -26,7 +26,7 @@
 
 ## 🎯 Project Vision
 
-LimeAI is designed to eliminate the **"administrative burden"** of healthcare. The primary goal is to allow physicians to focus on the patient by automating the creation of **Subjective, Objective, Assessment, and Plan (SOAP)** notes. By combining deterministic entity extraction with generative clinical synthesis, we ensure that every note is accurate, professional, and useful for clinical decision support.
+LimeAI is designed to eliminate the **"administrative burden"** of healthcare. The primary goal is to allow physicians to focus on the patient by automating the creation of **Subjective, Objective, Assessment, and Plan (SOAP)** notes. By combining deterministic entity extraction with generative clinical synthesis, I ensure that every note is accurate, professional, and useful for clinical decision support.
 
 ---
 
@@ -53,23 +53,23 @@ graph TD
 
 ## 🧬 The Scribe Pipeline
 
-Our pipeline is engineered for high-stakes clinical environments, ensuring that data is processed with both speed and medical precision.
+The pipeline is engineered for high-stakes clinical environments, ensuring that data is processed with both speed and medical precision.
 
 ### 1. Medical-Grade Transcription
-We utilize **Amazon Transcribe Medical** with the following configuration:
+I utilize **Amazon Transcribe Medical** with the following configuration:
 *   **Specialty:** `PRIMARYCARE`
 *   **Type:** `DICTATION`
 *   **Features:** High-accuracy speech-to-text specifically trained on medical terminology, handling complex pharmaceutical names and anatomical terms that generic ASR models (like Whisper base) typically fail to recognize.
 
 ### 2. Clinical Entity Extraction (NER)
-**Amazon Comprehend Medical** acts as our clinical brain. It identifies:
+**Amazon Comprehend Medical** acts as the system's clinical brain. It identifies:
 *   **Medications:** Names, dosage, route, frequency, and strength.
 *   **Medical Conditions:** Diagnoses, symptoms, and anatomical references.
 *   **PHI:** Identification of Protected Health Information for security flagging.
 
 ### 3. Generative Synthesis (The AI Scribe)
-We leverage **Claude 3** (via **Amazon Bedrock**) as our synthesis engine.
-*   **Ground Truth Injection:** We provide the LLM with the raw transcript *plus* the extracted entities as "Ground Truth" to prevent hallucinations.
+I leverage **Claude 3** (via **Amazon Bedrock**) as the synthesis engine.
+*   **Ground Truth Injection:** I provide the LLM with the raw transcript *plus* the extracted entities as "Ground Truth" to prevent hallucinations.
 *   **Contextual Reasoning:** The model is prompted with a clinical persona to structure the narrative sections (Subjective/Assessment) while maintaining the deterministic facts found by Comprehend Medical.
 
 ---
@@ -77,8 +77,8 @@ We leverage **Claude 3** (via **Amazon Bedrock**) as our synthesis engine.
 ## 💡 Key Technical Decisions
 
 ### 1. Deterministic Extraction vs. Pure Generative AI
-*   **Decision:** We do not rely solely on an LLM to find medications.
-*   **Reasoning:** LLMs can "hallucinate" dosages or frequencies if the audio is slightly unclear. By using Comprehend Medical first, we get a list of entities with a **Confidence Score**.
+*   **Decision:** I do not rely solely on an LLM to find medications.
+*   **Reasoning:** LLMs can "hallucinate" dosages or frequencies if the audio is slightly unclear. By using Comprehend Medical first, I get a list of entities with a **Confidence Score**.
 *   **Impact:** High-confidence AWS entities are prioritized, ensuring that the critical "Plan" section of the SOAP note is based on clinical fact, not probabilistic guessing.
 
 ### 2. Logic Encapsulation (Business Layer)
@@ -95,10 +95,10 @@ We leverage **Claude 3** (via **Amazon Bedrock**) as our synthesis engine.
 
 LimeAI adheres to the highest standards of medical data privacy.
 
-*   **HIPAA Eligibility:** We exclusively use AWS services that are part of the AWS BAA (Business Associate Addendum).
+*   **HIPAA Eligibility:** I exclusively use AWS services that are part of the AWS BAA (Business Associate Addendum).
 *   **Encryption at Rest:** PostgreSQL (RDS) and S3 buckets use AES-256 encryption.
 *   **Encryption in Transit:** All data flows through HTTPS/TLS 1.2+ protocols.
-*   **Zero-Retention Policy:** We configure Bedrock models to ensure that input data is not used to train foundation models, maintaining strict data sovereignty.
+*   **Zero-Retention Policy:** I configure Bedrock models to ensure that input data is not used to train foundation models, maintaining strict data sovereignty.
 *   **Auditability:** Prepared for CloudTrail integration to provide a full audit log of clinical record access.
 
 ---
@@ -109,9 +109,9 @@ Transparancy is key. This project is a **"Vertical Slice" technical demo**, inte
 
 | Limitation | Impact | Context & Solution |
 | :--- | :--- | :--- |
-| **Max File Size: 4.5MB** | Audio files larger than ~4.5MB will fail to upload. | **Why?** We are uploading files via Vercel/Next.js Server Actions, which have strict body size limits.<br>**Production Fix:** In a real app, we would use **Presigned URLs** to upload directly to S3 from the client, bypassing the server entirely. We skipped this to avoid the complexity of a signed-url handshake for this MVP. |
+| **Max File Size: 4.5MB** | Audio files larger than ~4.5MB will fail to upload. | **Why?** I am uploading files via Vercel/Next.js Server Actions, which have strict body size limits.<br>**Production Fix:** In a real app, I would use **Presigned URLs** to upload directly to S3 from the client, bypassing the server entirely. I skipped this to avoid the complexity of a signed-url handshake for this MVP. |
 | **Processing Time** | Transcription + AI Synthesis takes ~30-60 seconds. | **Why?** Medical ASR is computationally expensive. The UI currently "blocks" or creates a pending state.<br>**Production Fix:** Use Webhooks (Amazon EventBridge) to notify the frontend when the job is done, rather than making the user wait or poll. |
-| **Single Speaker** | Pipeline assumes one clear voice (Doctor). | **Why?** While AWS supports Diarization (Speaker A vs B), enabling it adds complexity to the prompt engineering (who said what?). For this demo, we focused on perfect clinical extraction of the *Doctor's* dictation. |
+| **Single Speaker** | Pipeline assumes one clear voice (Doctor). | **Why?** While AWS supports Diarization (Speaker A vs B), enabling it adds complexity to the prompt engineering (who said what?). For this demo, I focused on perfect clinical extraction of the *Doctor's* dictation. |
 
 ---
 
@@ -170,7 +170,7 @@ Transparancy is key. This project is a **"Vertical Slice" technical demo**, inte
 
 ## ⚙️ Automated Setup Scripts
 
-We have provided a suite of bash scripts to automate the provisioning of all necessary AWS infrastructure.
+I have provided a suite of bash scripts to automate the provisioning of all necessary AWS infrastructure.
 **Run them in this order:**
 
 ### 1. `scripts/deploy-db.sh` (Infrastructure)
