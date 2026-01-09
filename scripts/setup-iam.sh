@@ -53,6 +53,14 @@ cat <<EOF > /tmp/limeai-policy.json
                 "bedrock:InvokeModel"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "RDSAccess",
+            "Effect": "Allow",
+            "Action": [
+                "rds:*"
+            ],
+            "Resource": "*"
         }
     ]
 }
