@@ -6,6 +6,11 @@ frontend:
         - npm ci
     build:
       commands:
+        - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
+        - echo "LIME_AWS_REGION=$LIME_AWS_REGION" >> .env.production
+        - echo "LIME_AWS_ACCESS_KEY_ID=$LIME_AWS_ACCESS_KEY_ID" >> .env.production
+        - echo "LIME_AWS_SECRET_ACCESS_KEY=$LIME_AWS_SECRET_ACCESS_KEY" >> .env.production
+        - echo "LIME_AWS_S3_BUCKET=$LIME_AWS_S3_BUCKET" >> .env.production
         - npx prisma generate
         - npx prisma db push
         - npm run build
