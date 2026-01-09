@@ -20,8 +20,7 @@ import { useCustomForm } from "@/hooks/use-custom-form";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { ScribeFormValues, initialValues, scribeValidationSchema } from "../validations";
 import { createNote } from "@/app/actions/scribe";
-import { API_ROUTES, PAGE_ROUTES } from "@/constants/api";
-import { AWS_CONFIG } from "@/constants/config";
+import { PAGE_ROUTES } from "@/constants/api";
 
 interface ScribeClientProps {
     patients: Patient[];

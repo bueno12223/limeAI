@@ -165,6 +165,58 @@ Currently, the app waits for transcription to finish. In production, I would imp
 
 ---
 
+
+---
+
+## ☁️ Deployment on AWS Amplify
+
+This project is configured for **AWS Amplify Gen 2** (Hosting) and **Amazon RDS** (Database).
+
+### 2. Configure IAM Permissions (Automated)
+We have included a script to automatically create an IAM User with the precise permissions needed (S3, Transcribe Medical, Comprehend Medical, Bedrock).
+
+```bash
+# Run the IAM setup script
+./scripts/setup-iam.sh
+```
+*   It will create a user `lime-ai-service-user`.
+*   It will generate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` into a file called `access-keys.json`.
+*   **Action:** Copy those credentials into your `.env` file and delete `access-keys.json`.
+
+### 3. Provision the Database (RDS)
+We have included a script to automatically provision a Free-Tier eligible PostgreSQL instance using CloudFormation.
+
+```bash
+# Run the deployment script
+./scripts/deploy-db.sh
+```
+*   This will take ~5-10 minutes.
+*   Once finished, it will output your `DATABASE_URL`.
+*   **Copy this URL** — you will need it for the next step.
+
+### 4. Connect to Amplify Console
+1.  Push your code to a Git repository (GitHub, GitLab, etc.).
+2.  Log in to the **AWS Amplify Console**.
+3.  Click **"Create new app"** -> **"GitHub"**.
+4.  Select your repository and branch.
+5.  **Build Settings**: Amplify should automatically detect the `amplify.yml` file in the root. If not, copy the contents of `amplify.yml` into the build settings editor.
+
+### 5. Environment Variables
+In the Amplify Console, go to **App settings** -> **Environment variables** and add:
+
+| Variable | Value |
+| :--- | :--- |
+| `DATABASE_URL` | *(Paste the URL from Step 1 output)* |
+| `AWS_ACCESS_KEY_ID` | *(Your dedicated user key for Transcribe/Bedrock)* |
+| `AWS_SECRET_ACCESS_KEY` | *(Your dedicated user secret)* |
+| `AWS_REGION` | `us-east-1` |
+| `AWS_S3_BUCKET` | *(Your S3 bucket name)* |
+
+### 6. Deploy
+Click **Save and Deploy**. Amplify will build your Next.js app, run `prisma generate` to connect to your new RDS database, and deploy the application globally.
+
+---
+
 <div align="center">
   <small>Built with ❤️ by Jesus Berrio</small>
 </div>
