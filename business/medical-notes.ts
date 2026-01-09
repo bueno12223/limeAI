@@ -7,8 +7,7 @@ import { EntityType } from '@prisma/client';
 import { comprehendMedicalClient } from '@/lib/aws-clients';
 import { MappedEntity, SOAPData } from '@/types/medical';
 
-import { InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
-import { bedrockClient } from "@/lib/aws-clients";
+import { generateSOAPContent } from "@/lib/llm";
 
 export async function generateStructuredSOAP(transcript: string, entities: MappedEntity[]): Promise<SOAPData> {
     const SUBJECTIVE_PLACEHOLDER = `Patient Transcript: ${transcript}`;
@@ -39,7 +38,7 @@ Raw Transcript:
 
 Instructions:
 1. Treat the transcript as a single-speaker medical dictation from a clinician.
-2. Extract the "Subjective" section based on the patient symptoms and history described by the clinician.
+2. Summarize the "Subjective" section concisely based on the patient symptoms and history described. Do NOT just copy the transcript.
 3. Extract the "Assessment" section based on the clinician's findings and diagnoses.
 4. Extract the "Plan" section based on the clinician's instructions and medications.
 5. Check the "Context - Diagnosed Conditions" list provided above for reference.
@@ -54,32 +53,7 @@ Output JSON format:
 `;
 
     try {
-        const payload = {
-            anthropic_version: "bedrock-2023-05-31",
-            max_tokens: 1000,
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "text",
-                            text: prompt
-                        }
-                    ]
-                }
-            ]
-        };
-
-        const command = new InvokeModelCommand({
-            modelId: "anthropic.claude-3-haiku-20240307-v1:0",
-            contentType: "application/json",
-            accept: "application/json",
-            body: JSON.stringify(payload),
-        });
-
-        const response = await bedrockClient.send(command);
-        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-        const aiContent = responseBody.content[0].text;
+        const aiContent = await generateSOAPContent(prompt);
 
         const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
@@ -95,9 +69,9 @@ Output JSON format:
             plan: planText
         };
     } catch (error) {
-        console.error("Bedrock SOAP Generation Failed:", error);
+        console.error("SOAP Generation Failed:", error);
         return {
-            subjective: SUBJECTIVE_PLACEHOLDER,
+            subjective: `[AI Generation Failed] ${SUBJECTIVE_PLACEHOLDER}`,
             objective: null,
             assessment: diagnoses ? `Diagnoses: ${diagnoses}` : "No specific diagnoses identified.",
             plan: planText

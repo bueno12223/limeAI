@@ -11,6 +11,7 @@ frontend:
         - echo "LIME_AWS_ACCESS_KEY_ID=$LIME_AWS_ACCESS_KEY_ID" >> .env.production
         - echo "LIME_AWS_SECRET_ACCESS_KEY=$LIME_AWS_SECRET_ACCESS_KEY" >> .env.production
         - echo "LIME_AWS_S3_BUCKET=$LIME_AWS_S3_BUCKET" >> .env.production
+        - echo "GEMINI_API_KEY=$GEMINI_API_KEY" >> .env.production
         - npx prisma generate
         - npx prisma db push
         - npm run build
