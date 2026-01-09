@@ -174,9 +174,22 @@ export function ScribeClient({ patients }: ScribeClientProps) {
                                                         formik.values.patientId === patient.id ? "opacity-100" : "opacity-0"
                                                     )}
                                                 />
-                                                <div className="flex flex-col">
-                                                    <span className="font-medium">{patient.lastName}, {patient.firstName}</span>
-                                                    <span className="text-xs text-muted-foreground">{patient.mrn}</span>
+                                                <div className="flex items-center gap-2">
+                                                    {patient.avatarUrl ? (
+                                                        <img
+                                                            src={patient.avatarUrl}
+                                                            alt={`${patient.firstName} ${patient.lastName}`}
+                                                            className="h-8 w-8 rounded-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                                                            {patient.firstName[0]}{patient.lastName[0]}
+                                                        </div>
+                                                    )}
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{patient.lastName}, {patient.firstName}</span>
+                                                        <span className="text-xs text-muted-foreground">{patient.mrn}</span>
+                                                    </div>
                                                 </div>
                                             </CommandItem>
                                         ))}
@@ -193,7 +206,20 @@ export function ScribeClient({ patients }: ScribeClientProps) {
                 {selectedPatient && (
                     <Card className="animate-in fade-in slide-in-from-top-2">
                         <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Patient Context</CardTitle>
+                            <CardTitle className="text-base flex items-center gap-2">
+                                {selectedPatient.avatarUrl ? (
+                                    <img
+                                        src={selectedPatient.avatarUrl}
+                                        alt={`${selectedPatient.firstName} ${selectedPatient.lastName}`}
+                                        className="h-6 w-6 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]">
+                                        {selectedPatient.firstName[0]}{selectedPatient.lastName[0]}
+                                    </div>
+                                )}
+                                Patient Context
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-4 text-sm">
                             <div className="grid grid-cols-2 gap-1">

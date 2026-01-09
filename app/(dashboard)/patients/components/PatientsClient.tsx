@@ -80,9 +80,17 @@ export function PatientsClient({ initialPatients }: PatientsClientProps) {
                                     <TableCell className="font-mono">{patient.mrn}</TableCell>
                                     <TableCell className="font-medium">
                                         <div className="flex items-center gap-2">
-                                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                                                {patient.firstName[0]}{patient.lastName[0]}
-                                            </div>
+                                            {patient.avatarUrl ? (
+                                                <img
+                                                    src={patient.avatarUrl}
+                                                    alt={`${patient.firstName} ${patient.lastName}`}
+                                                    className="h-8 w-8 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                                    {patient.firstName[0]}{patient.lastName[0]}
+                                                </div>
+                                            )}
                                             {patient.firstName} {patient.lastName}
                                         </div>
                                     </TableCell>

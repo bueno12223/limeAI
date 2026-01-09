@@ -41,7 +41,11 @@ export function SeedModal({ isOpen, onOpenChange, onComplete, mode = "initial" }
         const toastId = toast.loading("Generating patient records...");
 
         try {
-            const res = await fetch(`${API_ROUTES.SEED_PATIENTS}?count=${count[0]}`);
+            const res = await fetch(API_ROUTES.SEED_PATIENTS, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ count: count[0] })
+            });
             const data = await res.json();
 
             if (!res.ok) throw new Error(data.error || "Request failed");

@@ -88,6 +88,17 @@ export function NoteDetailClient({ noteId }: NoteDetailClientProps) {
                     ) : (
                         <FileText className="h-6 w-6 text-muted-foreground" />
                     )}
+                    {note.patient.avatarUrl ? (
+                        <img
+                            src={note.patient.avatarUrl}
+                            alt={`${note.patient.firstName} ${note.patient.lastName}`}
+                            className="h-8 w-8 rounded-full object-cover mr-3"
+                        />
+                    ) : (
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs mr-3">
+                            {note.patient.firstName[0]}{note.patient.lastName[0]}
+                        </div>
+                    )}
                     <h1 className="text-3xl font-bold tracking-tight">
                         {note.patient.lastName}, {note.patient.firstName}
                     </h1>
